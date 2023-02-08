@@ -2,10 +2,12 @@ import trottle from 'lodash.throttle';
 
 const form = document.querySelector('.feedback-form');
 const { email: emailInput, message: messageInput } = form.elements;
+const emailValidParetn = /\w+@\w+\.\w+/g;
+let feedbackFormState = {};
 
-const feedbackFormState = {};
 try {
   const savedData = JSON.parse(localStorage.getItem('feedback-form-state'));
+  feedbackFormState = { ...savedData };
 
   if (savedData) {
     if (savedData.email) {
@@ -45,6 +47,10 @@ function onSubmitForm(event) {
     event.preventDefault();
     try {
       const savedData = JSON.parse(localStorage.getItem('feedback-form-state'));
+      if (!savedData.email.match(emailValidParetn)) {
+        alert('please enter correct email');
+        return;
+      }
       if (savedData) {
         console.log(
           `email: ${savedData.email}`,
